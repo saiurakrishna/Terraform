@@ -1,0 +1,21 @@
+[
+  {
+    "name": "myapp",
+    "image": "453093980721.dkr.ecr.us-east-2.amazonaws.com/cloudseals/node-app",
+    "cpu": 512,
+    "memory": 1024,
+    "essential": true,
+    "networkMode": "awsvpc",
+    "environment" : [
+      { "name" : "DBConnectionString", "value" : "db.cloudseals.com:2050" },
+      { "name" : "DBName", "value" : "CSDB" }
+    ],
+    "portMappings": [
+      {
+         "containerPort": 7777,
+       "hostPort": 7777
+      }
+    ]
+  }
+]
+

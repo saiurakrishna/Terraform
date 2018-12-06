@@ -1,0 +1,29 @@
+resource "aws_autoscaling_group" "myapp1" {
+  name                 = "myapp"
+  max_size             = 1
+  min_size             = 1
+  launch_configuration = "${aws_launch_configuration.myapp.name}"
+  vpc_zone_identifier  = ["${aws_subnet.myapp_public_a.id}", "${aws_subnet.myapp_public_c.id}"]
+
+    tag {
+    key                 = "Name"
+    value               = "${var.aws_resource_base_name}"
+    propagate_at_launch = true
+  }
+}
+
+
+
+
+# Launch Config
+resource "aws_launch_configuration" "myapp" {
+  associate_public_ip_address = true
+  depends_on                  = ["aws_internet_gateway.myapp-igw"]
+  name                        = "${var.aws_resource_base_name}"
+  image_id                    = "${var.aws_ecs_optimized_ami_id}"
+  instance_type               = "t2.micro"
+  security_groups             = ["${aws_security_group.myapp.id}"]
+  iam_instance_profile        = "${aws_iam_instance_profile.myapp.id}"
+  user_data                   = "#!/bin/bash\necho ECS_CLUSTER='${aws_ecs_cluster.myapp.name}' >> /etc/ecs/ecs.config"
+}
+
